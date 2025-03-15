@@ -1,0 +1,28 @@
+Sure, here's the technology stack you'll need for this project:
+
+Frontend: React.js
+
+You can install it using npx create-react-app . in your frontend directory.
+State Management: Redux (optional)
+
+You can install it using npm install redux react-redux in your frontend directory.
+Backend: Node.js with Express.js
+
+Node.js can be downloaded and installed from here.
+Express can be installed using npm install express in your backend directory.
+Weather API: OpenWeatherMap
+
+You can get a free API key from here.
+Hosting/Deployment: Heroku, AWS, or Google Cloud
+
+You can choose any of these based on your preference. They all have free tiers.
+Version Control: Git
+
+Git can be downloaded and installed from here.
+Code Editor: Visual Studio Code
+
+VS Code can be downloaded and installed from here.
+Package Manager: npm (comes with Node.js) or Yarn
+
+Yarn can be downloaded and installed from here.
+Remember to install these technologies globally on your machine (except for project-specific dependencies like React, Redux, and Express, which should be installed within their respective directories).
