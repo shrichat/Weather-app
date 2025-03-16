@@ -19,8 +19,17 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 public class JavaFX extends Application {
+	 private static final String DEFAULT_GIF = "/images/sunny.gif";
+	 private static final String SUNNY_GIF = "/images/sunny.gif";
+	 private static final String CLOUDY_GIF = "/images/cloudy.gif";
+	 private static final String RAINY_GIF = "/images/rainy.gif";
+	 private static final String SNOWY_GIF = "/images/snowy.gif";
+	 private static final String STORMY_GIF = "/images/stormy.gif";
+	 
     private BorderPane root;
     
     public static void main(String[] args) {
@@ -31,10 +40,10 @@ public class JavaFX extends Application {
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("I'm a professional Weather App!");
         root = new BorderPane();
-        root.setPadding(new Insets(20));
+        root.setPadding(new Insets(10, 20, 20, 20));
         
         initializeUI();
-        setupRefreshButton();
+   
 
         Scene scene = new Scene(root, 1000, 700);
         primaryStage.setScene(scene);
@@ -60,20 +69,7 @@ public class JavaFX extends Application {
         root.setBottom(bottomBox);
     }
 
-    private void setupRefreshButton() {
-        Button refreshButton = new Button("Refresh Data");
-        refreshButton.setFont(Font.font("Arial", 14));
-        refreshButton.setStyle("-fx-padding: 8 15;");
-        refreshButton.setOnAction(e -> {
-            root.getChildren().clear();
-            initializeUI();
-        });
 
-        HBox refreshBox = new HBox(refreshButton);
-        refreshBox.setAlignment(Pos.BOTTOM_RIGHT);
-        refreshBox.setPadding(new Insets(10));
-        root.setBottom(refreshBox);
-    }
 
     private GridPane createCalendarPane() {
         GridPane calendar = new GridPane();
@@ -116,11 +112,12 @@ public class JavaFX extends Application {
         calendar.setMinWidth(350);
         return calendar;
     }
-
+    
     private VBox createWeatherInfoBox(weather.Period today, double tempC, ArrayList<weather.Period> forecast) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE MMMM dd");
         String formattedDate = dateFormat.format(today.startTime);
         
+   
         Label cityLabel = new Label("Chicago, IL");
         cityLabel.setFont(Font.font("Arial", FontWeight.BOLD, 32));
 
@@ -133,6 +130,39 @@ public class JavaFX extends Application {
         Label tempLabel = new Label(String.format("%d° F / %.1f° C", (int) today.temperature, tempC));
         tempLabel.setFont(Font.font("Arial", FontWeight.BOLD, 28));
 
+    
+        ImageView weatherGif = new ImageView();
+        try {
+            String forecastLower = today.shortForecast.toLowerCase();
+            String gifPath = DEFAULT_GIF;
+            
+            if(forecastLower.contains("storm")) {
+                gifPath = STORMY_GIF;
+            } else if(forecastLower.contains("sun")) {
+                gifPath = SUNNY_GIF;
+            } else if(forecastLower.contains("cloud")) {
+                gifPath = CLOUDY_GIF;
+            } else if(forecastLower.contains("rain")) {
+                gifPath = RAINY_GIF;
+            } else if(forecastLower.contains("snow")) {
+                gifPath = SNOWY_GIF;
+            }
+
+            Image image = new Image(getClass().getResourceAsStream(gifPath));
+            weatherGif.setImage(image);
+        } catch (Exception e) {
+            System.out.println("Error loading GIF: " + e.getMessage());
+        }
+        weatherGif.setFitWidth(150);
+        weatherGif.setFitHeight(150);
+        weatherGif.setPreserveRatio(true);
+
+       
+        HBox topContent = new HBox(20); 
+        VBox textContent = new VBox(8, cityLabel, dateLabel, conditionLabel, tempLabel);
+        topContent.getChildren().addAll(textContent, weatherGif);
+
+      
         String highLow = calculateHighLow(forecast, today);
         Label highLowLabel = new Label(highLow);
         highLowLabel.setFont(Font.font("Arial", 14));
@@ -141,10 +171,11 @@ public class JavaFX extends Application {
         Label shouldILabel = new Label(recommendations);
         shouldILabel.setFont(Font.font("Arial", 14));
 
-        VBox weatherBox = new VBox(10, cityLabel, dateLabel, conditionLabel, tempLabel, highLowLabel, shouldILabel);
-        weatherBox.setAlignment(Pos.CENTER_LEFT);
-        weatherBox.setPadding(new Insets(20));
-        weatherBox.setStyle("-fx-spacing: 15;");
+      
+        VBox weatherBox = new VBox(10, topContent, highLowLabel, shouldILabel);
+        weatherBox.setAlignment(Pos.TOP_LEFT);
+        weatherBox.setPadding(new Insets(0, 20, 20, 20));
+        weatherBox.setStyle("-fx-spacing: 10;");
 
         return weatherBox;
     }
@@ -171,7 +202,7 @@ public class JavaFX extends Application {
         String jacket = today.temperature < 60 ? "Yes" : "No";
         String umbrella = (today.shortForecast.toLowerCase().matches(".*(rain|shower|snow).*")) ? "Yes" : "No";
         
-        return "Should I:\n" +
+        return "Would I need to:\n" +
                "Wear a Hat?: " + wearHat + "\n" +
                "Carry Sunglasses?: " + sunglasses + "\n" +
                "Wear a Jacket?: " + jacket + "\n" +
