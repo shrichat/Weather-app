@@ -29,6 +29,7 @@ public class JavaFX extends Application {
 	 private static final String RAINY_GIF = "/images/rainy.gif";
 	 private static final String SNOWY_GIF = "/images/snowy.gif";
 	 private static final String STORMY_GIF = "/images/stormy.gif";
+	 private static final String NIGHT_GIF = "/images/night.gif";
 	 
     private BorderPane root;
     
@@ -116,8 +117,7 @@ public class JavaFX extends Application {
     private VBox createWeatherInfoBox(weather.Period today, double tempC, ArrayList<weather.Period> forecast) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE MMMM dd");
         String formattedDate = dateFormat.format(today.startTime);
-        
-   
+
         Label cityLabel = new Label("Chicago, IL");
         cityLabel.setFont(Font.font("Arial", FontWeight.BOLD, 32));
 
@@ -130,22 +130,27 @@ public class JavaFX extends Application {
         Label tempLabel = new Label(String.format("%d° F / %.1f° C", (int) today.temperature, tempC));
         tempLabel.setFont(Font.font("Arial", FontWeight.BOLD, 28));
 
-    
+        Label detailedForecastLabel = new Label("Forecast: " + today.detailedForecast);
+        detailedForecastLabel.setFont(Font.font("Arial", 14));
+        detailedForecastLabel.setWrapText(true); 
+
         ImageView weatherGif = new ImageView();
         try {
             String forecastLower = today.shortForecast.toLowerCase();
             String gifPath = DEFAULT_GIF;
-            
-            if(forecastLower.contains("storm")) {
+
+            if (forecastLower.contains("storm")) {
                 gifPath = STORMY_GIF;
-            } else if(forecastLower.contains("sun")) {
+            } else if (forecastLower.contains("sun")) {
                 gifPath = SUNNY_GIF;
-            } else if(forecastLower.contains("cloud")) {
+            } else if (forecastLower.contains("cloud")) {
                 gifPath = CLOUDY_GIF;
-            } else if(forecastLower.contains("rain")) {
+            } else if (forecastLower.contains("rain")) {
                 gifPath = RAINY_GIF;
-            } else if(forecastLower.contains("snow")) {
+            } else if (forecastLower.contains("snow")) {
                 gifPath = SNOWY_GIF;
+            } else if (forecastLower.contains("Night")) {
+            	gifPath = 
             }
 
             Image image = new Image(getClass().getResourceAsStream(gifPath));
@@ -157,12 +162,10 @@ public class JavaFX extends Application {
         weatherGif.setFitHeight(150);
         weatherGif.setPreserveRatio(true);
 
-       
-        HBox topContent = new HBox(20); 
+        HBox topContent = new HBox(20);
         VBox textContent = new VBox(8, cityLabel, dateLabel, conditionLabel, tempLabel);
         topContent.getChildren().addAll(textContent, weatherGif);
 
-      
         String highLow = calculateHighLow(forecast, today);
         Label highLowLabel = new Label(highLow);
         highLowLabel.setFont(Font.font("Arial", 14));
@@ -171,8 +174,7 @@ public class JavaFX extends Application {
         Label shouldILabel = new Label(recommendations);
         shouldILabel.setFont(Font.font("Arial", 14));
 
-      
-        VBox weatherBox = new VBox(10, topContent, highLowLabel, shouldILabel);
+        VBox weatherBox = new VBox(10, topContent, highLowLabel, detailedForecastLabel, shouldILabel);
         weatherBox.setAlignment(Pos.TOP_LEFT);
         weatherBox.setPadding(new Insets(0, 20, 20, 20));
         weatherBox.setStyle("-fx-spacing: 10;");
@@ -193,14 +195,39 @@ public class JavaFX extends Application {
                 low = Math.min(low, temp);
             }
         }
-        return String.format("High: %d°F | Low: %d°F", high, low);
+        int c_high = (high - 32) * 5/9;
+        int c_low = (low - 32) * 5/9;
+        return String.format("High: %d°F / %d°C | Low: %d°F / %d°C", high, c_high, low, c_low);
     }
 
     private String getRecommendations(weather.Period today) {
-        String wearHat = today.temperature > 80 ? "Yes" : "No";
-        String sunglasses = today.shortForecast.toLowerCase().contains("sun") ? "Yes" : "No";
-        String jacket = today.temperature < 60 ? "Yes" : "No";
-        String umbrella = (today.shortForecast.toLowerCase().matches(".*(rain|shower|snow).*")) ? "Yes" : "No";
+        String wearHat;
+        if(today.temperature > 80) {
+        	wearHat = "Yes"; 
+        } else {
+        	wearHat = "No";
+        }
+        
+        String sunglasses;
+        if(today.shortForecast.toLowerCase().contains("sun")) {
+        	sunglasses = "Yes";
+        } else {
+        	sunglasses = "No";
+        }
+	
+        String jacket;
+        if( today.temperature < 60) {
+        	jacket =  "Yes";
+        } else {
+        	jacket  = "No";
+        }
+    
+        String umbrella;
+        if (today.shortForecast.toLowerCase().matches(".*(rain|shower|snow).*")) {
+        	umbrella = "Yes"; 
+        } else {
+        	umbrella = "No";
+        }
         
         return "Would I need to:\n" +
                "Wear a Hat?: " + wearHat + "\n" +
