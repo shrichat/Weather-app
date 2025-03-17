@@ -138,6 +138,8 @@ public class JavaFX extends Application {
         try {
             String forecastLower = today.shortForecast.toLowerCase();
             String gifPath = DEFAULT_GIF;
+            
+           
 
             if (forecastLower.contains("storm")) {
                 gifPath = STORMY_GIF;
@@ -149,8 +151,10 @@ public class JavaFX extends Application {
                 gifPath = RAINY_GIF;
             } else if (forecastLower.contains("snow")) {
                 gifPath = SNOWY_GIF;
-            } else if (forecastLower.contains("Night")) {
-            	gifPath = 
+            } else if (forecastLower.contains("night") && forecastLower.contains("clear")) {
+            	gifPath = NIGHT_GIF;
+            	
+            	
             }
 
             Image image = new Image(getClass().getResourceAsStream(gifPath));
