@@ -153,8 +153,6 @@ public class JavaFX extends Application {
                 gifPath = SNOWY_GIF;
             } else if (forecastLower.contains("night") && forecastLower.contains("clear")) {
             	gifPath = NIGHT_GIF;
-            	
-            	
             }
 
             Image image = new Image(getClass().getResourceAsStream(gifPath));
@@ -206,7 +204,7 @@ public class JavaFX extends Application {
 
     private String getRecommendations(weather.Period today) {
         String wearHat;
-        if(today.temperature > 80) {
+        if(today.temperature > 70) {
         	wearHat = "Yes"; 
         } else {
         	wearHat = "No";
@@ -227,7 +225,7 @@ public class JavaFX extends Application {
         }
     
         String umbrella;
-        if (today.shortForecast.toLowerCase().matches(".*(rain|shower|snow).*")) {
+        if (today.shortForecast.toLowerCase().matches(".*(rain|snow).*")) {
         	umbrella = "Yes"; 
         } else {
         	umbrella = "No";
