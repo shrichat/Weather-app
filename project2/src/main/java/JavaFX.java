@@ -92,7 +92,7 @@ public class JavaFX extends Application {
 
         LocalDate todayDate = LocalDate.now();
 
-        for (int i = 1; i < 8; i++) {
+        for (int i = 0; i < 7; i++) {
             LocalDate dayDate = todayDate.plusDays(i);
 
             ArrayList<weather.Period> dayPeriods = new ArrayList<>();
@@ -290,7 +290,8 @@ public class JavaFX extends Application {
             
             Label detailedForecastLabel = new Label("Forecast: " + detailedForecast);
             detailedForecastLabel.setFont(Font.font("Arial", 14));
- 
+            detailedForecastLabel.setWrapText(true);
+
             
             VBox textBox = new VBox(5);
             textBox.getChildren().add(dateLabel);
@@ -398,6 +399,8 @@ public class JavaFX extends Application {
 
         if (forecastLower.contains("storm")) {
             gifPath = STORMY_GIF;
+        } else if (forecastLower.contains("partly") && forecastLower.contains("sun")) {
+            gifPath = PARTLYSUNNY_GIF;
         } else if (forecastLower.contains("sun")) {
             gifPath = SUNNY_GIF;
         } else if (forecastLower.contains("cloud")) {
