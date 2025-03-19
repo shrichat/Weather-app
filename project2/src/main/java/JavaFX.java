@@ -35,6 +35,7 @@ public class JavaFX extends Application {
     private Scene mainScene;
     private Scene forecastScene;
     private Scene sevenDayForecastScene;
+    private String detailedForecast;
     private ArrayList<weather.Period> forecast;
     private BorderPane root;
 
@@ -239,7 +240,8 @@ public class JavaFX extends Application {
                     shortForecast = p.shortForecast;
                     windSpeed = p.windSpeed;
                     windDirection = p.windDirection;
-                    precipitation = p.probabilityOfPrecipitation.value; // Access precipitation value
+                    precipitation = p.probabilityOfPrecipitation.value;
+                    detailedForecast = p.detailedForecast;
                 }
             }
             
@@ -286,12 +288,17 @@ public class JavaFX extends Application {
             Label precipitationLabel = new Label(String.format("Precipitation: %d%%", precipitation));
             precipitationLabel.setFont(Font.font("Arial", 14));
             
+            Label detailedForecastLabel = new Label("Forecast: " + detailedForecast);
+            detailedForecastLabel.setFont(Font.font("Arial", 14));
+ 
+            
             VBox textBox = new VBox(5);
             textBox.getChildren().add(dateLabel);
             textBox.getChildren().add(tempLabel);
             textBox.getChildren().add(conditionLabel);
             textBox.getChildren().add(windLabel);
             textBox.getChildren().add(precipitationLabel);
+            textBox.getChildren().add(detailedForecastLabel);
             textBox.setAlignment(Pos.CENTER_LEFT);
             
             HBox dayBox = new HBox(20);
