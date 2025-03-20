@@ -119,7 +119,6 @@ public class JavaFX extends Application {
             String windSpeed = "";
             String windDirection = "";
             int precipitation = 0;
-
             for (weather.Period p : dayPeriods) {
                 int temp = (int) p.temperature;
                 if (temp > high) high = temp;
@@ -128,9 +127,11 @@ public class JavaFX extends Application {
                     shortForecast = p.shortForecast;
                     windSpeed = p.windSpeed;
                     windDirection = p.windDirection;
-                    precipitation = p.probabilityOfPrecipitation.value; 
                 }
+                precipitation = Math.max(precipitation, p.probabilityOfPrecipitation.value);
             }
+
+
 
             int cHigh = (high - 32) * 5 / 9;
             int cLow = (low - 32) * 5 / 9;
@@ -525,12 +526,12 @@ public class JavaFX extends Application {
     }
 
     private HBox createBottomBox() {
-        Button forecastButton = new Button("3 Day Forecast →");
+        Button forecastButton = new Button("3 Day Forecast ");
         forecastButton.setFont(Font.font("Arial", 14));
         forecastButton.setStyle("-fx-padding: 8 15;");
         forecastButton.setOnAction(e -> primaryStage.setScene(forecastScene));
         
-        Button sevenDayButton = new Button("7-Day Forecast →");
+        Button sevenDayButton = new Button("7 Day Forecast ");
         sevenDayButton.setFont(Font.font("Arial", 14));
         sevenDayButton.setStyle("-fx-padding: 8 15;");
         sevenDayButton.setOnAction(e -> primaryStage.setScene(sevenDayForecastScene));
