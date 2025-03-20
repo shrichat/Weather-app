@@ -11,6 +11,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -63,30 +64,37 @@ public class JavaFX extends Application {
             throw new RuntimeException("Forecast did not load");
         }
 
+    
+        root = new BorderPane();
+        root.setPadding(new Insets(10, 20, 20, 20));
+
+       
         weather.Period today = forecast.get(0);
         double tempC = (today.temperature - 32) * 5 / 9;
-
         GridPane calendarPane = createCalendarPane();
         VBox weatherInfo = createWeatherInfoBox(today, tempC, forecast);
         HBox bottomBox = createBottomBox();
 
-        root = new BorderPane();
-        root.setPadding(new Insets(10, 20, 20, 20));
+  
         root.setLeft(calendarPane);
         root.setCenter(weatherInfo);
         root.setBottom(bottomBox);
         
         mainScene = new Scene(root, 1000, 700);
     }
-
+    
+  
     private void createSevenDayForecastScene() {
         BorderPane sevenDayRoot = new BorderPane();
         sevenDayRoot.setPadding(new Insets(6)); 
 
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setFitToWidth(true);
+
         VBox forecastContent = new VBox(6); 
         forecastContent.setPadding(new Insets(6)); 
 
-        Label forecastTitle = new Label("7 Day Forecast Display");
+        Label forecastTitle = new Label("7 Day Forecast");
         forecastTitle.setFont(Font.font("Arial", FontWeight.BOLD, 16)); 
         forecastContent.getChildren().add(forecastTitle);
 
@@ -185,6 +193,8 @@ public class JavaFX extends Application {
             forecastContent.getChildren().add(dayBox);
         }
 
+        scrollPane.setContent(forecastContent);
+
         Button backButton = new Button("Back to Today's Forecast");
         backButton.setOnAction(e -> primaryStage.setScene(mainScene));
 
@@ -192,11 +202,14 @@ public class JavaFX extends Application {
         forecastBottom.setAlignment(Pos.CENTER);
         forecastBottom.setPadding(new Insets(11)); 
 
-        sevenDayRoot.setCenter(forecastContent);
+        sevenDayRoot.setCenter(scrollPane);
         sevenDayRoot.setBottom(forecastBottom);
 
         sevenDayForecastScene = new Scene(sevenDayRoot, 900, 1000); 
     }
+   
+
+   
     
     
     private void createForecastScene() {
@@ -206,7 +219,7 @@ public class JavaFX extends Application {
         VBox forecastContent = new VBox(20);
         forecastContent.setPadding(new Insets(20));
         
-        Label forecastTitle = new Label("3-Day Forecast Display");
+        Label forecastTitle = new Label("3 Day Forecast");
         forecastTitle.setFont(Font.font("Arial", FontWeight.BOLD, 20));
         forecastContent.getChildren().add(forecastTitle);
 
@@ -326,11 +339,12 @@ public class JavaFX extends Application {
     }
 
     private GridPane createCalendarPane() {
-        GridPane calendar = new GridPane();
-        calendar.setPadding(new Insets(15));
-        calendar.setHgap(10);
-        calendar.setVgap(10);
-        calendar.setStyle("-fx-background-color: #f0f0f0; -fx-padding: 15;");
+    	GridPane calendar = new GridPane();
+        calendar.setPadding(new Insets(10, 5, 10, 10)); 
+        calendar.setHgap(5);
+        calendar.setVgap(5);
+        calendar.setStyle("-fx-background-color: #f0f0f0; -fx-padding: 10;");
+        calendar.setMaxHeight(300);
 
         LocalDate now = LocalDate.now();
         Month month = now.getMonth();
@@ -363,42 +377,20 @@ public class JavaFX extends Application {
             if (column == 0) row++;
         }
 
-        calendar.setMinWidth(350);
+        calendar.setMinWidth(280);
         return calendar;
     }
 
     private VBox createWeatherInfoBox(weather.Period today, double tempC, ArrayList<weather.Period> forecast) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE MMMM dd");
         String formattedDate = dateFormat.format(today.startTime);
-
-        Label cityLabel = new Label("Chicago, IL");
-        cityLabel.setFont(Font.font("Arial", FontWeight.BOLD, 32));
-
-        Label dateLabel = new Label(formattedDate);
-        dateLabel.setFont(Font.font("Arial", 18));
-
-        Label conditionLabel = new Label(today.shortForecast + " conditions");
-        conditionLabel.setFont(Font.font("Arial", 16));
-
-        Label tempLabel = new Label(String.format("%d° F / %.1f° C", (int) today.temperature, tempC));
-        tempLabel.setFont(Font.font("Arial", FontWeight.BOLD, 28));
-
-        Label windLabel = new Label(String.format("Wind: %s %s", today.windSpeed, today.windDirection));
-        windLabel.setFont(Font.font("Arial", 14));
-        
-        Label precipitationLabel = new Label(String.format("Precipitation: %d%%", today.probabilityOfPrecipitation.value));
-        precipitationLabel.setFont(Font.font("Arial", 14));
-        
-        Label detailedForecastLabel = new Label("Forecast: " + today.detailedForecast);
-        detailedForecastLabel.setFont(Font.font("Arial", 14));
-        detailedForecastLabel.setWrapText(true);
-
-        ImageView weatherGif = new ImageView();
+        String bgImage = "/images/sunnyclear.jpg";
+        boolean isNight = false;
         String forecastLower = today.shortForecast.toLowerCase();
         String gifPath = DEFAULT_GIF;
-
         if (forecastLower.contains("storm")) {
             gifPath = STORMY_GIF;
+            bgImage = "/images/rainysky.jpg";
         } else if (forecastLower.contains("partly") && forecastLower.contains("sun")) {
             gifPath = PARTLYSUNNY_GIF;
         } else if (forecastLower.contains("sun")) {
@@ -407,35 +399,76 @@ public class JavaFX extends Application {
             gifPath = CLOUDY_GIF;
         } else if (forecastLower.contains("rain")) {
             gifPath = RAINY_GIF;
+            bgImage = "/images/rainysky.jpg";
         } else if (forecastLower.contains("snow")) {
             gifPath = SNOWY_GIF;
-        } else if (forecastLower.contains("night") && forecastLower.contains("clear")) {
+            bgImage = "/images/rainysky.jpg";
+        } else if (forecastLower.contains("night") || forecastLower.contains("clear")) {
             gifPath = NIGHT_GIF;
+            bgImage = "/images/nightsky.jpg";
+            isNight = true;
         }
-
-        weatherGif.setImage(new Image(getClass().getResourceAsStream(gifPath)));
+        root.setStyle("-fx-background-image: url('" + bgImage + "'); -fx-background-size: cover;");
+        String textColor = "";
+        if (isNight) {
+            textColor = "-fx-text-fill: white;";
+        }
+        Label cityLabel = new Label("Chicago, IL");
+        cityLabel.setFont(Font.font("Arial", FontWeight.BOLD, 32));
+        cityLabel.setStyle(textColor);
+        Label dateLabel = new Label(formattedDate);
+        dateLabel.setFont(Font.font("Arial", 18));
+        dateLabel.setStyle(textColor);
+        Label conditionLabel = new Label(today.shortForecast + " conditions");
+        conditionLabel.setFont(Font.font("Arial", 16));
+        conditionLabel.setStyle(textColor);
+        Label tempLabel = new Label((int) today.temperature + "° F / " + String.format("%.1f", tempC) + "° C");
+        tempLabel.setFont(Font.font("Arial", FontWeight.BOLD, 28));
+        tempLabel.setStyle(textColor);
+        Label detailedForecastLabel = new Label("Forecast: " + today.detailedForecast);
+        detailedForecastLabel.setFont(Font.font("Arial", 14));
+        detailedForecastLabel.setWrapText(true);
+        detailedForecastLabel.setStyle(textColor);
+        Label shouldILabel = new Label(getRecommendations(today));
+        shouldILabel.setFont(Font.font("Arial", 14));
+        shouldILabel.setStyle(textColor);
+        ImageView weatherGif = new ImageView(new Image(getClass().getResourceAsStream(gifPath)));
         weatherGif.setFitWidth(150);
         weatherGif.setFitHeight(150);
-        weatherGif.setPreserveRatio(true); 
-        HBox topContent = new HBox(20);
-        VBox textContent = new VBox(8, cityLabel, dateLabel, conditionLabel, tempLabel, windLabel, precipitationLabel);
-        topContent.getChildren().addAll(textContent, weatherGif);
-
+        weatherGif.setPreserveRatio(true);
+        Label windLabel = new Label("Wind: " + today.windSpeed + " " + today.windDirection);
+        windLabel.setFont(Font.font("Arial", 14));
+        windLabel.setStyle(textColor);
+        Label precipitationLabel = new Label("Precipitation: " + today.probabilityOfPrecipitation.value + "%");
+        precipitationLabel.setFont(Font.font("Arial", 14));
+        precipitationLabel.setStyle(textColor);
         String highLow = calculateHighLow(forecast, today);
         Label highLowLabel = new Label(highLow);
         highLowLabel.setFont(Font.font("Arial", 14));
-
-        String recommendations = getRecommendations(today);
-        Label shouldILabel = new Label(recommendations);
-        shouldILabel.setFont(Font.font("Arial", 14));
-
-        VBox weatherBox = new VBox(10, topContent, highLowLabel, detailedForecastLabel, shouldILabel);
-        weatherBox.setAlignment(Pos.TOP_LEFT);
-        weatherBox.setPadding(new Insets(0, 20, 20, 20));
-        weatherBox.setStyle("-fx-spacing: 10;");
-
+        highLowLabel.setStyle(textColor);
+        VBox leftBox = new VBox(20);
+        leftBox.getChildren().addAll(cityLabel, dateLabel, conditionLabel, tempLabel, detailedForecastLabel, shouldILabel);
+        leftBox.setAlignment(Pos.TOP_LEFT);
+        VBox rightBox = new VBox(20);
+        rightBox.getChildren().addAll(weatherGif, windLabel, precipitationLabel, highLowLabel);
+        rightBox.setAlignment(Pos.TOP_LEFT);
+        HBox topContent = new HBox(60);
+        topContent.getChildren().addAll(leftBox, rightBox);
+        topContent.setAlignment(Pos.TOP_CENTER);
+        VBox weatherBox = new VBox(20);
+        weatherBox.setPadding(new Insets(0, 40, 40, 40)); 
+        weatherBox.setAlignment(Pos.TOP_CENTER); 
+        weatherBox.getChildren().add(topContent);
+        leftBox.setMinWidth(350);
+        rightBox.setMinWidth(350);
+        weatherBox.setPrefSize(1000, 600);
         return weatherBox;
     }
+
+
+
+
+
 
     private String calculateHighLow(ArrayList<weather.Period> forecast, weather.Period today) {
         LocalDate todayDate = today.startTime.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -502,9 +535,15 @@ public class JavaFX extends Application {
         sevenDayButton.setStyle("-fx-padding: 8 15;");
         sevenDayButton.setOnAction(e -> primaryStage.setScene(sevenDayForecastScene));
         
-        HBox bottomBox = new HBox(10, forecastButton, sevenDayButton);
+        HBox bottomBox = new HBox(10);
         bottomBox.setAlignment(Pos.CENTER);
         bottomBox.setPadding(new Insets(20));
+        bottomBox.setPrefWidth(Double.MAX_VALUE);
+        bottomBox.getChildren().addAll(forecastButton, sevenDayButton);
+        BorderPane.setAlignment(bottomBox, Pos.CENTER);
+        
         return bottomBox;
     }
+
+
 }
