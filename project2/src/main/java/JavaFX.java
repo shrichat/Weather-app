@@ -87,19 +87,15 @@ public class JavaFX extends Application {
     
   
     private void createSevenDayForecastScene() {
-        BorderPane sevenDayRoot = new BorderPane();
-        sevenDayRoot.setPadding(new Insets(6)); 
-
+        VBox rootVBox = new VBox(10);
+        rootVBox.setPadding(new Insets(6));
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setFitToWidth(true);
-
-        VBox forecastContent = new VBox(6); 
-        forecastContent.setPadding(new Insets(6)); 
-
+        VBox forecastContent = new VBox(6);
+        forecastContent.setPadding(new Insets(6));
         Label forecastTitle = new Label("7 Day Forecast");
-        forecastTitle.setFont(Font.font("Arial", FontWeight.BOLD, 16)); 
+        forecastTitle.setFont(Font.font("Arial", FontWeight.BOLD, 16));
         forecastContent.getChildren().add(forecastTitle);
-
         LocalDate todayDate = LocalDate.now();
 
         for (int i = 0; i < 7; i++) {
@@ -133,13 +129,10 @@ public class JavaFX extends Application {
                 precipitation = Math.max(precipitation, p.probabilityOfPrecipitation.value);
             }
 
-
-
             int cHigh = (high - 32) * 5 / 9;
             int cLow = (low - 32) * 5 / 9;
 
             String dateStr = dayDate.getMonth().toString() + " " + dayDate.getDayOfMonth() + ", " + dayDate.getYear();
-
             String gifPath = DEFAULT_GIF;
             String forecastLower = shortForecast.toLowerCase();
             if (forecastLower.contains("storm")) {
@@ -159,73 +152,55 @@ public class JavaFX extends Application {
             }
 
             ImageView dayGif = new ImageView(new Image(getClass().getResourceAsStream(gifPath)));
-            dayGif.setFitWidth(50); 
-            dayGif.setFitHeight(50); 
+            dayGif.setFitWidth(50);
+            dayGif.setFitHeight(50);
             dayGif.setPreserveRatio(true);
-
             Label dateLabel = new Label(dateStr);
-            dateLabel.setFont(Font.font("Arial", FontWeight.BOLD, 15)); 
-
+            dateLabel.setFont(Font.font("Arial", FontWeight.BOLD, 15));
             Label tempLabel = new Label(String.format("High: %d°F/%d°C   Low: %d°F/%d°C", high, cHigh, low, cLow));
-            tempLabel.setFont(Font.font("Arial", 11)); 
-
+            tempLabel.setFont(Font.font("Arial", 11));
             Label conditionLabel = new Label("Condition: " + shortForecast);
-            conditionLabel.setFont(Font.font("Arial", 11)); 
-
+            conditionLabel.setFont(Font.font("Arial", 11));
             Label windLabel = new Label(String.format("Wind: %s %s", windSpeed, windDirection));
-            windLabel.setFont(Font.font("Arial", 11)); 
-
+            windLabel.setFont(Font.font("Arial", 11));
             Label precipitationLabel = new Label(String.format("Precipitation: %d%%", precipitation));
-            precipitationLabel.setFont(Font.font("Arial", 11)); 
-
-            VBox textBox = new VBox(3); 
+            precipitationLabel.setFont(Font.font("Arial", 11));
+            VBox textBox = new VBox(3);
             textBox.getChildren().add(dateLabel);
             textBox.getChildren().add(tempLabel);
             textBox.getChildren().add(conditionLabel);
             textBox.getChildren().add(windLabel);
             textBox.getChildren().add(precipitationLabel);
             textBox.setAlignment(Pos.CENTER_LEFT);
-
-            HBox dayBox = new HBox(11); 
+            HBox dayBox = new HBox(11);
             dayBox.getChildren().add(dayGif);
             dayBox.getChildren().add(textBox);
             dayBox.setAlignment(Pos.CENTER_LEFT);
-            dayBox.setStyle("-fx-background-color: #e0e0e0; -fx-padding: 11;"); 
+            dayBox.setStyle("-fx-background-color: #e0e0e0; -fx-padding: 11;");
             dayBox.setMaxWidth(10000);
 
             forecastContent.getChildren().add(dayBox);
         }
 
         scrollPane.setContent(forecastContent);
-
         Button backButton = new Button("Back to Today's Forecast");
         backButton.setOnAction(e -> primaryStage.setScene(mainScene));
-
-        HBox forecastBottom = new HBox(backButton);
-        forecastBottom.setAlignment(Pos.CENTER);
-        forecastBottom.setPadding(new Insets(11)); 
-
-        sevenDayRoot.setCenter(scrollPane);
-        sevenDayRoot.setBottom(forecastBottom);
-
-        sevenDayForecastScene = new Scene(sevenDayRoot, 900, 1000); 
+        rootVBox.getChildren().addAll(scrollPane, backButton);
+        sevenDayForecastScene = new Scene(rootVBox, 1000, 700);
     }
-   
+
 
    
     
     
     private void createForecastScene() {
         BorderPane forecastRoot = new BorderPane();
-        forecastRoot.setPadding(new Insets(10, 20, 20, 20));
-        
+        forecastRoot.setPadding(new Insets(10, 20, 20, 20));  
         VBox forecastContent = new VBox(20);
-        forecastContent.setPadding(new Insets(20));
-        
+        forecastContent.setPadding(new Insets(20)); 
         Label forecastTitle = new Label("3 Day Forecast");
         forecastTitle.setFont(Font.font("Arial", FontWeight.BOLD, 20));
         forecastContent.getChildren().add(forecastTitle);
-
         LocalDate todayDate = LocalDate.now();
         
         for (int i = 1; i < 4; i++) {
@@ -287,28 +262,20 @@ public class JavaFX extends Application {
             ImageView dayGif = new ImageView(new Image(getClass().getResourceAsStream(gifPath)));
             dayGif.setFitWidth(80);
             dayGif.setFitHeight(80);
-            dayGif.setPreserveRatio(true);
-            
+            dayGif.setPreserveRatio(true);   
             Label dateLabel = new Label(dateStr);
-            dateLabel.setFont(Font.font("Arial", FontWeight.BOLD, 16));
-            
+            dateLabel.setFont(Font.font("Arial", FontWeight.BOLD, 16));   
             Label tempLabel = new Label(String.format("High: %d°F/%d°C   Low: %d°F/%d°C", high, cHigh, low, cLow));
-            tempLabel.setFont(Font.font("Arial", 14));
-            
+            tempLabel.setFont(Font.font("Arial", 14));          
             Label conditionLabel = new Label("Condition: " + shortForecast);
-            conditionLabel.setFont(Font.font("Arial", 14));
-            
+            conditionLabel.setFont(Font.font("Arial", 14));       
             Label windLabel = new Label(String.format("Wind: %s %s", windSpeed, windDirection));
-            windLabel.setFont(Font.font("Arial", 14));
-            
+            windLabel.setFont(Font.font("Arial", 14));      
             Label precipitationLabel = new Label(String.format("Precipitation: %d%%", precipitation));
-            precipitationLabel.setFont(Font.font("Arial", 14));
-            
+            precipitationLabel.setFont(Font.font("Arial", 14));   
             Label detailedForecastLabel = new Label("Forecast: " + detailedForecast);
             detailedForecastLabel.setFont(Font.font("Arial", 14));
-            detailedForecastLabel.setWrapText(true);
-
-            
+            detailedForecastLabel.setWrapText(true);            
             VBox textBox = new VBox(5);
             textBox.getChildren().add(dateLabel);
             textBox.getChildren().add(tempLabel);
@@ -316,8 +283,7 @@ public class JavaFX extends Application {
             textBox.getChildren().add(windLabel);
             textBox.getChildren().add(precipitationLabel);
             textBox.getChildren().add(detailedForecastLabel);
-            textBox.setAlignment(Pos.CENTER_LEFT);
-            
+            textBox.setAlignment(Pos.CENTER_LEFT); 
             HBox dayBox = new HBox(20);
             dayBox.getChildren().add(dayGif);
             dayBox.getChildren().add(textBox);
@@ -326,18 +292,15 @@ public class JavaFX extends Application {
             dayBox.setMaxWidth(10000);
             
             forecastContent.getChildren().add(dayBox);
-        }
-        
+        }   
         Button backButton = new Button("Back to Today's Forecast");
         backButton.setOnAction(e -> primaryStage.setScene(mainScene));
         
         HBox forecastBottom = new HBox(backButton);
         forecastBottom.setAlignment(Pos.CENTER);
-        forecastBottom.setPadding(new Insets(20));
-        
+        forecastBottom.setPadding(new Insets(20));    
         forecastRoot.setCenter(forecastContent);
         forecastRoot.setBottom(forecastBottom);
-        
         forecastScene = new Scene(forecastRoot, 1000, 700);
     }
 
