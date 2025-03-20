@@ -159,19 +159,25 @@ public class JavaFX extends Application {
             dateLabel.setFont(Font.font("Arial", FontWeight.BOLD, 15));
             Label tempLabel = new Label(String.format("High: %d°F/%d°C   Low: %d°F/%d°C", high, cHigh, low, cLow));
             tempLabel.setFont(Font.font("Arial", 11));
+            
             Label conditionLabel = new Label("Condition: " + shortForecast);
             conditionLabel.setFont(Font.font("Arial", 11));
+            
             Label windLabel = new Label(String.format("Wind: %s %s", windSpeed, windDirection));
             windLabel.setFont(Font.font("Arial", 11));
+            
             Label precipitationLabel = new Label(String.format("Precipitation: %d%%", precipitation));
             precipitationLabel.setFont(Font.font("Arial", 11));
+            
             VBox textBox = new VBox(3);
+            
             textBox.getChildren().add(dateLabel);
             textBox.getChildren().add(tempLabel);
             textBox.getChildren().add(conditionLabel);
             textBox.getChildren().add(windLabel);
             textBox.getChildren().add(precipitationLabel);
             textBox.setAlignment(Pos.CENTER_LEFT);
+            
             HBox dayBox = new HBox(11);
             dayBox.getChildren().add(dayGif);
             dayBox.getChildren().add(textBox);
@@ -263,19 +269,26 @@ public class JavaFX extends Application {
             dayGif.setFitWidth(80);
             dayGif.setFitHeight(80);
             dayGif.setPreserveRatio(true);   
+            
             Label dateLabel = new Label(dateStr);
             dateLabel.setFont(Font.font("Arial", FontWeight.BOLD, 16));   
+            
             Label tempLabel = new Label(String.format("High: %d°F/%d°C   Low: %d°F/%d°C", high, cHigh, low, cLow));
-            tempLabel.setFont(Font.font("Arial", 14));          
+            tempLabel.setFont(Font.font("Arial", 14));   
+            
             Label conditionLabel = new Label("Condition: " + shortForecast);
-            conditionLabel.setFont(Font.font("Arial", 14));       
+            conditionLabel.setFont(Font.font("Arial", 14)); 
+            
             Label windLabel = new Label(String.format("Wind: %s %s", windSpeed, windDirection));
             windLabel.setFont(Font.font("Arial", 14));      
+            
             Label precipitationLabel = new Label(String.format("Precipitation: %d%%", precipitation));
             precipitationLabel.setFont(Font.font("Arial", 14));   
+            
             Label detailedForecastLabel = new Label("Forecast: " + detailedForecast);
             detailedForecastLabel.setFont(Font.font("Arial", 14));
-            detailedForecastLabel.setWrapText(true);            
+            detailedForecastLabel.setWrapText(true);     
+            
             VBox textBox = new VBox(5);
             textBox.getChildren().add(dateLabel);
             textBox.getChildren().add(tempLabel);
@@ -284,6 +297,7 @@ public class JavaFX extends Application {
             textBox.getChildren().add(precipitationLabel);
             textBox.getChildren().add(detailedForecastLabel);
             textBox.setAlignment(Pos.CENTER_LEFT); 
+            
             HBox dayBox = new HBox(20);
             dayBox.getChildren().add(dayGif);
             dayBox.getChildren().add(textBox);
@@ -382,45 +396,58 @@ public class JavaFX extends Application {
         Label cityLabel = new Label("Chicago, IL");
         cityLabel.setFont(Font.font("Arial", FontWeight.BOLD, 32));
         cityLabel.setStyle(textColor);
+        
         Label dateLabel = new Label(formattedDate);
         dateLabel.setFont(Font.font("Arial", 18));
         dateLabel.setStyle(textColor);
+        
         Label conditionLabel = new Label(today.shortForecast + " conditions");
         conditionLabel.setFont(Font.font("Arial", 16));
         conditionLabel.setStyle(textColor);
+        
         Label tempLabel = new Label((int) today.temperature + "° F / " + String.format("%.1f", tempC) + "° C");
         tempLabel.setFont(Font.font("Arial", FontWeight.BOLD, 28));
         tempLabel.setStyle(textColor);
+        
         Label detailedForecastLabel = new Label("Forecast: " + today.detailedForecast);
         detailedForecastLabel.setFont(Font.font("Arial", 14));
         detailedForecastLabel.setWrapText(true);
         detailedForecastLabel.setStyle(textColor);
+        
         Label shouldILabel = new Label(getRecommendations(today));
         shouldILabel.setFont(Font.font("Arial", 14));
         shouldILabel.setStyle(textColor);
+        
         ImageView weatherGif = new ImageView(new Image(getClass().getResourceAsStream(gifPath)));
         weatherGif.setFitWidth(150);
         weatherGif.setFitHeight(150);
         weatherGif.setPreserveRatio(true);
+        
         Label windLabel = new Label("Wind: " + today.windSpeed + " " + today.windDirection);
         windLabel.setFont(Font.font("Arial", 14));
         windLabel.setStyle(textColor);
+        
         Label precipitationLabel = new Label("Precipitation: " + today.probabilityOfPrecipitation.value + "%");
         precipitationLabel.setFont(Font.font("Arial", 14));
         precipitationLabel.setStyle(textColor);
+        
         String highLow = calculateHighLow(forecast, today);
         Label highLowLabel = new Label(highLow);
         highLowLabel.setFont(Font.font("Arial", 14));
         highLowLabel.setStyle(textColor);
+        
         VBox leftBox = new VBox(20);
         leftBox.getChildren().addAll(cityLabel, dateLabel, conditionLabel, tempLabel, detailedForecastLabel, shouldILabel);
         leftBox.setAlignment(Pos.TOP_LEFT);
+        
         VBox rightBox = new VBox(20);
         rightBox.getChildren().addAll(weatherGif, windLabel, precipitationLabel, highLowLabel);
         rightBox.setAlignment(Pos.TOP_LEFT);
+        
         HBox topContent = new HBox(60);
         topContent.getChildren().addAll(leftBox, rightBox);
         topContent.setAlignment(Pos.TOP_CENTER);
+        
         VBox weatherBox = new VBox(20);
         weatherBox.setPadding(new Insets(0, 40, 40, 40)); 
         weatherBox.setAlignment(Pos.TOP_CENTER); 
@@ -477,12 +504,11 @@ public class JavaFX extends Application {
         }
     
         String umbrella;
-        if (today.shortForecast.toLowerCase().contains("rain") || today.shortForecast.toLowerCase().contains("snow")) {
+        if(today.shortForecast.toLowerCase().contains("rain") || today.shortForecast.toLowerCase().contains("snow")) {
             umbrella = "Yes"; 
         } else {
             umbrella = "No";
         }
-
         
         return "Would I need to:\n" +
                "Wear a Hat?: " + wearHat + "\n" +
