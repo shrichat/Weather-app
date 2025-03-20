@@ -47,7 +47,9 @@ public class JavaFX extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         this.primaryStage = primaryStage;
-        primaryStage.setTitle("I'm a professional Weather App!");
+        primaryStage.setTitle("NTF - Nature's True Forecast");
+        primaryStage.setResizable(false);
+
         
         initializeUI();
         createForecastScene();
