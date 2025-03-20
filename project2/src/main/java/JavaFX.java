@@ -477,11 +477,12 @@ public class JavaFX extends Application {
         }
     
         String umbrella;
-        if(today.shortForecast.toLowerCase().matches(".*(rain|snow).*")) {
+        if (today.shortForecast.toLowerCase().contains("rain") || today.shortForecast.toLowerCase().contains("snow")) {
             umbrella = "Yes"; 
         } else {
             umbrella = "No";
         }
+
         
         return "Would I need to:\n" +
                "Wear a Hat?: " + wearHat + "\n" +
